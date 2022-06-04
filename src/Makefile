@@ -10,8 +10,10 @@
 #
 #OUTPUTINC = -I$(NETCDF)/include
 #OUTPUTLIB = -L$(NETCDF)/lib
+FFTWINC = -I/usr/include
+FFTWLIB = -L/usr/lib/x86_64-linux-gnu
 #OUTPUTOPT = -DNETCDF -DNCFPLUS
-#LINKOPTS  = -lnetcdf -lnetcdff
+LINKOPTS  = -lfftw3
 #-----------------------------------------------------------------------------
 
 
@@ -82,10 +84,10 @@
 #DM = -DMPI
 #-----------------------------------------------------------------------------
 #  multiple processors, shared memory (OpenMP), GNU compiler
-#FC   = gfortran
-#OPTS = -ffree-form -ffree-line-length-none -O2 -finline-functions -fopenmp
-#CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
-#OMP  = -DOPENMP
+FC   = gfortran
+OPTS = -ffree-form -ffree-line-length-none -O2 -finline-functions -fopenmp
+CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
+OMP  = -DOPENMP
 #-----------------------------------------------------------------------------
 #  single processor, Cray fortran compiler
 #      (eg, NCSA's bluewaters)
@@ -125,6 +127,7 @@ SRC   = constants.F \
 	adv.F \
 	adv_routines.F \
 	anelp.F \
+	autotrans.F \
 	azimavg.F \
 	base.F \
 	bc.F \
@@ -214,13 +217,13 @@ AR      = ar cru
 all : cm1
 
 cm1:			$(OBJS)
-			$(FC) $(OBJS) $(FFLAGS) $(OUTPUTINC) $(OUTPUTLIB) $(LINKOPTS) -o ../run/cm1.exe
+			$(FC) $(OBJS) $(FFLAGS) $(OUTPUTINC) $(FFTWINC) $(OUTPUTLIB) $(FFTWLIB) $(LINKOPTS) -o ../run/cm1.exe
 			$(AR) onefile.F $(SRC)
 			mv onefile.F ../run
 
 .F.o:
 			$(CPP) $(DM) $(DP) $(ADV) $(OUTPUTOPT) $*.F > $*.f90
-			$(FC) $(FFLAGS) $(OUTPUTINC) -c $*.f90
+			$(FC) $(FFLAGS) $(OUTPUTINC) $(FFTWINC) -c $*.f90
 
 code:
 			$(AR) onefile.F $(SRC)
@@ -234,6 +237,7 @@ clean:
 adv.o: constants.o input.o pdef.o adv_routines.o ib_module.o
 adv_routines.o: input.o constants.o pdef.o comm.o
 anelp.o: constants.o input.o misclibs.o bc.o poiss.o
+autotrans.o: constants.o input.o misclibs.o
 azimavg.o: input.o constants.o cm1libs.o writeout_nc.o comm.o bc.o
 base.o: constants.o input.o bc.o comm.o goddard.o cm1libs.o getcape.o
 bc.o: constants.o input.o
@@ -283,7 +287,7 @@ restart_read.o: constants.o input.o writeout_nc.o lsnudge.o goddard.o lfoice.o r
 sfcphys.o: constants.o input.o cm1libs.o
 solve1.o: constants.o input.o bc.o diff2.o turbtend.o misclibs.o testcase_simple_phys.o eddy_recycle.o lsnudge.o
 solve2.o: constants.o input.o bc.o comm.o adv.o adv_routines.o sound.o sounde.o soundns.o soundcb.o anelp.o misclibs.o module_mp_nssl_2mom.o ib_module.o
-solve3.o: constants.o input.o bc.o comm.o adv_routines.o misclibs.o parcel.o lsnudge.o
+solve3.o: constants.o input.o bc.o comm.o adv_routines.o misclibs.o parcel.o lsnudge.o autotrans.o
 sorad3d.o: radlib3d.o
 sound.o: constants.o input.o misclibs.o bc.o comm.o ib_module.o
 sounde.o: constants.o input.o misclibs.o bc.o comm.o ib_module.o

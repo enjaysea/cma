@@ -255,6 +255,12 @@
 
       integer :: icrs,icenter,jcenter
       real :: xcenter,ycenter
+
+      logical :: restarted_autotrans
+      real, dimension(4,1) :: X_kal
+      real, dimension(4,4) :: P_kal
+      real :: umdt,vmdt
+
       double precision :: domainlocx,domainlocy
 
       double precision :: adaptmovetim
@@ -3370,7 +3376,7 @@
                    dt,dtlast,mtime,dbldt,                            &
                    xh,rxh,arh1,arh2,uh,ruh,xf,rxf,arf1,arf2,uf,ruf,  &
                    yh,vh,rvh,yf,vf,rvf,                              &
-                   rds,sigma,rdsf,sigmaf,                            &
+                   xfref,yfref,rds,sigma,rdsf,sigmaf,                &
                    zh,mh,rmh,c1,c2,zf,mf,rmf,wprof,ug,vg,            &
                    pi0,rho0,prs0,thv0,th0,rth0,qv0,qc0,              &
                    qi0,rr0,rf0,rrf0,                                 &
@@ -3404,11 +3410,13 @@
                    tkw1,tkw2,tke1,tke2,tks1,tks2,tkn1,tkn2,          &
                    kw1,kw2,ke1,ke2,ks1,ks2,kn1,kn2,                  &
                    tw1,tw2,te1,te2,ts1,ts2,tn1,tn2,                  &
+                   dat1,dat2,dat3,reqt,                              &
                    udiag,vdiag,wdiag,pdiag,                          &
                    lsnudge_u,lsnudge_v,lsnudge_th,lsnudge_qv,        &
                    dowriteout,dorad,getdbz,getvt,dotdwrite,          &
                    dotbud,doqbud,doubud,dovbud,dowbud,donudge,       &
-                   doazimwrite,dorestart)
+                   doazimwrite,dorestart,restarted_autotrans,X_kal,  &
+                   P_kal,umdt,vmdt)
         ! end_solve3
 
 

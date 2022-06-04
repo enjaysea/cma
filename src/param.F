@@ -356,6 +356,7 @@
       call MPI_BCAST(iorigin  ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(axisymm  ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(imove    ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
+      call MPI_BCAST(automove ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(iptra    ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(npt      ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(pdtra    ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
@@ -2867,6 +2868,7 @@
       if(dowr) write(outfile,*) 'iorigin   =',iorigin
       if(dowr) write(outfile,*) 'axisymm   =',axisymm
       if(dowr) write(outfile,*) 'imove     =',imove
+      if(dowr) write(outfile,*) 'automove  =',automove
       if(dowr) write(outfile,*) 'iptra     =',iptra
       if(dowr) write(outfile,*) 'npt       =',npt
       if(dowr) write(outfile,*) 'pdtra     =',pdtra

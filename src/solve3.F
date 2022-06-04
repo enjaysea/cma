@@ -78,7 +78,7 @@
                    dt,dtlast,mtime,dbldt,                            &
                    xh,rxh,arh1,arh2,uh,ruh,xf,rxf,arf1,arf2,uf,ruf,  &
                    yh,vh,rvh,yf,vf,rvf,                              &
-                   rds,sigma,rdsf,sigmaf,                            &
+                   xfref,yfref,rds,sigma,rdsf,sigmaf,                &
                    zh,mh,rmh,c1,c2,zf,mf,rmf,wprof,ug,vg,            &
                    pi0,rho0,prs0,thv0,th0,rth0,qv0,qc0,              &
                    qi0,rr0,rf0,rrf0,                                 &
@@ -112,11 +112,13 @@
                    tkw1,tkw2,tke1,tke2,tks1,tks2,tkn1,tkn2,          &
                    kw1,kw2,ke1,ke2,ks1,ks2,kn1,kn2,                  &
                    tw1,tw2,te1,te2,ts1,ts2,tn1,tn2,                  &
+                   dat1,dat2,dat3,reqt,                              &
                    udiag,vdiag,wdiag,pdiag,                          &
                    lsnudge_u,lsnudge_v,lsnudge_th,lsnudge_qv,        &
                    dowriteout,dorad,getdbz,getvt,dotdwrite,          &
                    dotbud,doqbud,doubud,dovbud,dowbud,donudge,       &
-                   doazimwrite,dorestart)
+                   doazimwrite,dorestart,restarted_autotrans,X_kal,  &
+                   P_kal,umdt,vmdt)
         ! end_solve3
       use input
       use constants
@@ -126,6 +128,7 @@
       use misclibs
       use parcel_module, only : parcel_driver
       use lsnudge_module
+      use autotrans_module
 #ifdef MPI
       use mpi
 #endif
@@ -143,6 +146,8 @@
       real, intent(in), dimension(ib:ie+1) :: xf,rxf,arf1,arf2,uf,ruf
       real, intent(in), dimension(jb:je) :: yh,vh,rvh
       real, intent(in), dimension(jb:je+1) :: yf,vf,rvf
+      real, intent(in), dimension(1-ngxy:nx+ngxy+1) :: xfref
+      real, intent(in), dimension(1-ngxy:ny+ngxy+1) :: yfref
       real, intent(in), dimension(kb:ke) :: rds,sigma
       real, intent(in), dimension(kb:ke+1) :: rdsf,sigmaf
       real, intent(in), dimension(ib:ie,jb:je,kb:ke) :: zh,mh,rmh,c1,c2
@@ -208,6 +213,10 @@
       real, intent(inout), dimension(imp,kmt,4)     :: ks1,ks2,kn1,kn2
       real, intent(inout), dimension(cmp,jmp,kmp,npt) :: tw1,tw2,te1,te2
       real, intent(inout), dimension(imp,cmp,kmp,npt) :: ts1,ts2,tn1,tn2
+      real, intent(inout), dimension(d3i,d3j) :: dat1
+      real, intent(inout), dimension(d2i,d2j) :: dat2
+      real, intent(inout), dimension(d3i,d3j,d3n) :: dat3
+      integer, intent(inout), dimension(d3t) :: reqt
       real, intent(inout) , dimension(ibdv:iedv,jbdv:jedv,kbdv:kedv,nudiag) :: udiag
       real, intent(inout) , dimension(ibdv:iedv,jbdv:jedv,kbdv:kedv,nvdiag) :: vdiag
       real, intent(inout) , dimension(ibdv:iedv,jbdv:jedv,kbdv:kedv,nwdiag) :: wdiag
@@ -215,6 +224,10 @@
       real, intent(inout), dimension(lsnudge_maxlevels,lsnudge_nmax) :: lsnudge_u,lsnudge_v,lsnudge_th,lsnudge_qv
       logical, intent(in) :: dowriteout,dorad,dotdwrite,doazimwrite,dorestart
       logical, intent(inout) :: getdbz,getvt,dotbud,doqbud,doubud,dovbud,dowbud,donudge
+      logical, intent(inout) :: restarted_autotrans
+      real, intent(inout), dimension(4,1) :: X_kal
+      real, intent(inout), dimension(4,4) :: P_kal
+      real, intent(inout) :: umdt,vmdt
 
 !-----------------------------------------------------------------------
 ! Arrays and variables defined inside solve
@@ -561,7 +574,13 @@
       ENDIF
 
 !----------
-
+      IF( imove.eq.1 .and. automove.eq.1 ) THEN ! do every time step
+        call autotrans(uf,vf,zh,zf,                           &
+                       ug,vg,u0,ua,u3d,v0,va,v3d,wa,          &
+                       dum2,dum5,dum6,zs,rgzu,rgzv,rds,sigma, &
+                       rdsf,sigmaf,dat1,dat2,dat3,reqt,       &
+                       xfref,yfref,dt,mtime,nstep,restarted_autotrans,X_kal,P_kal,umdt,vmdt)
+      ENDIF
       !$omp parallel do default(shared)  &
       !$omp private(i,j,k)
       do k=1,nk

@@ -95,7 +95,7 @@
               icor,betaplane,lspgrad,eqtset,idiss,efall,rterm,                &
               wbc,ebc,sbc,nbc,bbc,tbc,irbc,roflux,nudgeobc,                   &
               isnd,iwnd,itern,iinit,                                          &
-              irandp,ibalance,iorigin,axisymm,imove,iptra,npt,pdtra,          &
+              irandp,ibalance,iorigin,axisymm,imove,automove,iptra,npt,pdtra, &
               iprcl,nparcels,                                                 &
               stretch_x,stretch_y,stretch_z,                                  &
               bc_temp,ibw,ibe,ibs,ibn,npvals,                                 &
@@ -263,8 +263,8 @@
           icor,betaplane,lspgrad,eqtset,idiss,efall,rterm,              &
           wbc,ebc,sbc,nbc,bbc,tbc,irbc,roflux,nudgeobc,                 &
           isnd,iwnd,itern,iinit,                                        &
-          irandp,ibalance,iorigin,axisymm,imove,iptra,npt,pdtra,        &
-          iprcl,nparcels
+          irandp,ibalance,iorigin,axisymm,imove,automove,iptra,npt,     &
+          pdtra,iprcl,nparcels
       namelist /param3/ kdiff2,kdiff6,fcor,kdiv,alph,rdalpha,zd,xhd,alphobc, &
                         umove,vmove,v_t,l_h,lhref1,lhref2,l_inf,ndcnst,nt_c, &
                         csound,cstar
