@@ -10,8 +10,8 @@
 #
 OUTPUTINC = -I$(NETCDF)/include
 OUTPUTLIB = -L$(NETCDF)/lib
-FFTWINC = -I/usr/local/include
-FFTWLIB = -L/usr/local/lib
+FFTWINC = -I/usr/include
+FFTWLIB = -L/usr/lib64
 OUTPUTOPT = -DNETCDF -DNCFPLUS
 LINKOPTS  = -lnetcdf -lnetcdff -lfftw3
 #-----------------------------------------------------------------------------
