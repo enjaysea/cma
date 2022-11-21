@@ -80,7 +80,7 @@
  iorigin   =  2,
  axisymm   =  0,
  imove     =  1,
- automove  =  0,
+ automove  =  1,
  iptra     =  0,
  npt       =  1,
  pdtra     =  1,

@@ -8,12 +8,12 @@
 #              (NOTE: Don't change lines 3 and 4!)
 #  Note:  you may need to remove -DNCFPLUS if you use an old version of netcdf
 #
-#OUTPUTINC = -I$(NETCDF)/include
-#OUTPUTLIB = -L$(NETCDF)/lib
-#FFTWINC = -I$(FFTW_ROOT)/include
-#FFTWLIB = -L$(FFTW_ROOT)/lib
-#OUTPUTOPT = -DNETCDF -DNCFPLUS
-#LINKOPTS  = -lnetcdf -lnetcdff -lfftw3
+OUTPUTINC = -I$(NETCDF)/include
+OUTPUTLIB = -L$(NETCDF)/lib
+FFTWINC = -I/usr/local/include
+FFTWLIB = -L/usr/local/lib
+OUTPUTOPT = -DNETCDF -DNCFPLUS
+LINKOPTS  = -lnetcdf -lnetcdff -lfftw3
 #-----------------------------------------------------------------------------
 
 
@@ -84,10 +84,10 @@
 #DM = -DMPI
 #-----------------------------------------------------------------------------
 #  multiple processors, shared memory (OpenMP), GNU compiler
-#FC   = gfortran
-#OPTS = -ffree-form -ffree-line-length-none -O2 -finline-functions -fopenmp
-#CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
-#OMP  = -DOPENMP
+FC   = gfortran
+OPTS = -ffree-form -ffree-line-length-none -O2 -finline-functions -fopenmp
+CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
+OMP  = -DOPENMP
 #-----------------------------------------------------------------------------
 #  single processor, Cray fortran compiler
 #      (eg, NCSA's bluewaters)
